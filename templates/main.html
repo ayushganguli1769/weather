@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <title>INDEX</title>
+</head>
+<body style="font-size: large;">
+<!--navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/weather/">Weather</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav mr-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item active">
+              <a class="nav-link" href="/weather/">INDEX <span class="sr-only">(current)</span></a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/">ADMIN</a>
+            </li>
+         
+          </ul>
+              <ul class="navbar-nav">
+                
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/weather/logout/">Logout</a>
+                </li> 
+               {% else %}   
+            <li class="nav-item">
+              <a class="nav-link" href="/weather/login/">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/weather/register/">Register</a>
+            </li>
+            {% endif %}
+
+          </ul>
+       
+        </div>
+      
+      </nav>
+<!--navbar end-->        
+<br>
+<!--modal button-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="float: right; margin-right: 3.5%;">
+    ADD CITY
+  </button>
+<!--modal button end-->
+<div class="container">  
+{% if error_message != None %}
+<div class="card bg-danger text-white">
+    <div class="card-body">{{error_message}} </div>
+  </div>
+  <br>  
+{% endif %}
+<h1><span class="badge badge-danger">WEATHER LIST</span></h1>
+    <BR>   
+<div class="row">
+{% for city_weather in weather_data  %}
+    
+    {% if city_weather.found == True %}
+	    <div class="col-md-6 col-lg-4 col-xl-4 col-sm-12 " >
+            <div class="card" >
+                <img class="card-img-top img-fluid" src="{{city_weather.city_image}}" alt="Card image">
+                <div class="card-body">
+                  <h1 class="card-title" style="float: center;"> <span class="badge badge-danger">{{city_weather.city}}</span></h1><br>
+                  <img src="http://openweathermap.org/img/w/{{ city_weather.icon_image}}.png" class="col-6 img-fluid`"  alt="Image" style="float:center;">
+                  <h1><span class="badge badge-primary " style="float:center;" >{{city_weather.description}}</span></h1>
+                  <table class="table">
+				    <thead class="thead-dark">
+				      <tr>
+				        <th>Parameter</th>
+				        <th>Value</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				      <tr>
+				        <td>Temperature</td>
+				        <td>{{city_weather.temperature}}</td>
+				      </tr>
+			         <tr>
+			        <td>Pressure</td>
+			        <td>{{city_weather.pressure}} Pa</td>
+			      </tr>
+			         <tr>
+			        <td>Humidity</td>
+			        <td>{{ city_weather.humdity }} %</td>
+			      </tr>
+				    </tbody>
+          </table>
+                </div>
+              </div>
+              </div>
+              <br>
+ <!--
+        {{city_weather.city}} -
+        {{city_weather.description}}-
+        {{city_weather.temperature}} -
+        {{city_weather.pressure}} -
+        {{ city_weather.humdity }} - 
+        <br>
+        City Image: <br>
+        <img src="{{city_weather.city_image}}" height="400px" width="376px">
+        <br>
+        City Weather Icon:
+        <img src="http://openweathermap.org/img/w/{{ city_weather.icon_image}}.png"  alt="Image">
+        <br>
+        </div>-->
+    {% else  %}
+    <div class="col-md-6 col-lg-4 col-xl-4 col-sm-12"> 
+    <div class="card bg-secondary text-white">
+    <div class="card-body"><strong>Sorry, no data for {{ city_weather.city }} currently<br></strong></div>
+  </div>
+  </div>
+        
+        
+    {% endif %}
+{% endfor %}
+</div><!--end of row-->
+<!-- The Modal -->
+<div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">ADD CITY</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+  
+        <!-- Modal body -->
+        <div class="modal-body">
+<form action="{% url 'weather:weather' %}" method="POST"> <!--always leave space after url tag. bad habbits never die-->
+    {% csrf_token %}
+    <input type="text" name="city_name">
+    <button name="add" class="btn btn-primary">ADD</button>
+</form>
+</div>
+
+<!-- Modal footer -->
+<div class="modal-footer">
+  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+</div>
+
+</div>
+</div>
+</div>
+</div><!--container end-->
+</body>
+</html>
