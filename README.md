@@ -1,5 +1,5 @@
 # weather
-This is a weather map. Following apis have been used during this project</br>
+This is a weather app. Following apis have been used during this project</br>
 <table>
 	<tr>
 		<td><strong>API</strong> </td>
