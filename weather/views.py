@@ -18,7 +18,7 @@ def weather(request):
         responsew = requests.get(weather_url_final)
         dataw = responsew.json()
         weather_status_code = dataw['cod']
-        is_exist = is_exist = City.objects.annotate(my_name = Lower('name')).filter(my_name = name.lower(), user= request.user).exists()#code to check existance of city
+        is_exist = City.objects.annotate(my_name = Lower('name')).filter(my_name = name.lower(), user= request.user).exists()#code to check existance of city
         if is_exist == True:
             error_message = "You have already selected the city " + name.lower() + " . Weather data for the city exists in the page."
         elif weather_status_code == 200:
